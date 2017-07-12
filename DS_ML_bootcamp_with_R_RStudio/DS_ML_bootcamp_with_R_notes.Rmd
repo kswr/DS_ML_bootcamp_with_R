@@ -1,0 +1,214 @@
+---
+title: "Data Science and Machine Learning Bootcamp with R"
+output: html_notebook
+---
+
+[Course dashboard](https://www.udemy.com/data-science-and-machine-learning-bootcamp-with-r/learn/v4/overview)
+
+## Section 1 - Course Introduction
+
+### Lecture 1 - Introduction to Course
+
+Author - [Jose Portilla](http://www.pieriandata.com/)
+
+Couse is suitable for:
+
+- Developers who want to learn about Machine Learning
+- Complete begginers who wan't to learn coding and ML
+
+Course covers:
+
+- R programming
+- Machine Learning
+- Data Visualization
+
+Including:
+
+- Basic R programming topics
+- Data visualisation in R
+- Linear regression
+- Regression trees
+- Random forests
+- Neural networks
+- Web Data Mining
+
+Course includes:
+
+- ML Portfolio projects
+- R Programming Exercises
+- Capstone Data Projects
+- Over 100HD Video Lectures
+- Code and Explanation Notebooks for each video
+- Certificate of Completion
+
+### Lecture 2 - Course Curriculum
+
+Sections:
+
+1. Course Introduction
+    - what is Data Science
+    - Course FAQs
+2. Course Best Practices
+    - How to Get Help in the Course
+3. Windows Installation Set-Up
+    - installation
+4. Mac OS Installation Set-Up
+    - installation
+5. Linux Installation
+    - installation
+6. Development Environment Overview
+7. Introduction to R Basics
+    - basic R
+8. R Matrices
+    - basic R
+9. R Data Frames
+    - basic R
+10. R Lists
+    - basic R
+11. Data Input and Output with R
+    - basic R
+    - CSV
+    - Excel
+    - SQL
+    - Web Scraping
+12. R Programming Basics
+    - basic programming
+        - funtions
+        - loops
+        - statements
+    - data manipulation
+13. Advanced R Programming
+    - advanced programming
+14. Data Manipulation with R
+    - data handling and manipulation
+15. Data Visualization with R
+    - ggplot
+16. Data Visualization Project
+    - project
+17. Interactive Visualizations with Plotly
+    -Plotly
+18. Capstone Data Project
+    - project
+19. Introduction to Machine Learning with R
+20. Machine Learning with R - Linear Regression
+21. Machine Learning Project - Linear Regression
+22. Machine Learning with R - Logistic Regression
+23. Machine Learning Project - Logistic Regression
+24. Machine Learning with R - K Nearest Neighbors
+25. Machine Learning Project - K Nearest Neighbors
+26. Machine Learning with R - Decision Trees and Random Forests
+27. Machine Learning Project - Decision Trees and Random Forests
+28. Machine Learning with R - Support Vector Machines
+29. Machine Learning Project - Support Vector Machines
+30. Machine Learning with R - K-means Clustering
+31. Machine Learning Project - K-means Clustering
+32. Machine Learning with R - Natural Language Processing
+33. Machine Learning with R - Neural Nets
+34. Machine Learning Project - Neural Nets
+35. Bonus Section - Discounts for Other Courses
+
+### Lecture 3 - What is Data Science (skipped)
+
+### Lecture 4 - Course FAQ (skipped)
+
+1. Where can I download R and RStudio?
+2. Where can I get the Course Notes?
+3. Why are the Course Notes in HTML?
+4. How do I get a certificate of Completion? 
+
+## Section 2 - Course Best Practices
+
+### Lecture 5 - How to Get Help in the Course! (skipped)
+
+### Quiz 1: Welcome to the Course (skipped)
+
+### Lecture 6 - Installation and Set-Up (skipped)
+
+## Section 3 - Windows Installation Set-Up
+
+### Lecture 7 - Windows Installation Procedure (skipped)
+
+## Section 4 - Mac OS Installation Set-Up
+
+### Lecture 8 - Mac OS Installation Procedure (skipped)
+
+## Section 5 - Linux Installation
+
+### Lecture 9 - Linux/Unbuntu Installation Procedure (skipped)
+
+## Section 6 - Development Environment Overview
+
+### Lecture 10 - Development Environment Overview
+
+Overview of 2 following lessons
+
+### Lecture 11 - Course Notes
+
+How to get - resources section of the course
+
+Most lessons have corresponding notebook containing code from the lecture
+
+Notebooks contain:
+
+- Exercises
+- Answers to exercises
+- Projects input data
+- Projects output data
+- Sample projects
+
+### Lecture 12 - Guide to RStudio (skipped)
+
+## Section 7 - Introduction to R Basics
+
+[notebooks for this section](..\R-for-Data-Science-and-Machine-Learning\Basics of R and Data Types\R Basics)
+
+### Lecture 13 - Introduction to R Basics
+
+Structure of the notes
+
+### Lecture 14 - Arithmetic with R
+
+Modulo
+```{r}
+5 %% 2
+```
+
+### Lecture 15 - Variables
+
+Variable naming in allows usage of
+
+- downcase letters
+- uppercase letters
+- `_` underscore
+- `.` dot
+
+### Lecture 16 - R Data Types
+
+To check class of object use `class()` function
+
+### Lecture 17 - Vector Basics
+
+How to construct vector using `c()` (combine) function and assign name to each element of the vector
+
+#### Creating Vectors
+
+Vector - One dimensional array that can hold character, numeric or boolean datatypes
+
+If vector contains various datatypes on input, it truncates all data to one datatype
+
+#### Assigning names to elements of the vector
+
+```{r}
+# creating vector
+temps <- c(72,71,68,73,69,75,76)
+temps
+# asigning names
+days <- c('Mon','Tue','Wed','Thu','Fri','Sat','Sun')
+names(temps) <- days
+temps
+class(temps)
+# accesing value of named element of the vector
+temps['Wed']
+```
+
+### Lecture 18 - 
