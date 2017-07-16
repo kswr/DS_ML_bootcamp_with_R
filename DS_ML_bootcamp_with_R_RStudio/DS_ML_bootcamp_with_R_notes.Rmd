@@ -168,9 +168,14 @@ Structure of the notes
 
 ### Lecture 14 - Arithmetic with R
 
-Modulo
+Modulo (remainder)
 ```{r}
 5 %% 2
+```
+
+Qutient (pl. iloraz)
+```{r}
+5 %/% 2
 ```
 
 ### Lecture 15 - Variables
@@ -240,7 +245,7 @@ E.g. `help('vector')`
 
 `help.search()`  or `??<name>` looks for all related articles
 
-### Lecture 21 - Comparing Operators
+### Lecture 21 - Comparison Operators
 
 `> < >= <= == !=`
 
@@ -659,7 +664,7 @@ df
 
 ```{r}
 # all columns
-colnames(df) <- c('1','2','3','4','5')
+colnames(df) <- c('1','2','3')
 # one column, using index
 colnames(df)[1] <- 'New_col_name'
 ```
@@ -850,9 +855,11 @@ Writing to CSV
 write.csv(ex,file = 'my_new_example.csv')
 ```
 
-### Lecture 41 - Excel files in R
+### Lecture 42 - Excel files in R
 
-Install package `readxl` and load it to work with Excel files in R
+#### Reading Excel files
+
+Install package `readxl` and load it to read Excel files with R
 ```{r, include=FALSE}
 # install.packages('readxl')
 library(readxl)
@@ -873,3 +880,403 @@ entire.workbook <- lapply(excel_sheets('Sample-Sales-Data.xlsx'), read_excel, pa
 str(entire.workbook)
 ```
 
+#### Writing to Excel files
+
+Install package `xlsx` and load it to write to Excel files
+```{r, include=FALSE}
+# install.packages('xlsx')
+library(xlsx)
+```
+
+Writing
+```{r}
+write.xlsx(mtcars,"output_example.xlsx")
+```
+
+### Lecture 42 - SQL with R (do it yourself)
+
+#### Genereal Use - RODBC
+
+`odbcConnect` - connection to database parameters
+`sqlFetch` - connection to table
+`sqlQuery` - SQL query
+`close(<odbcConnection name>)` - closing connection function
+
+#### Specific packages
+
+Each DB connection requires specific package, such as `RMySQL`, `ROracle` or `RJDBC`
+
+Then do independent research using Google on how to use given package
+
+### Lecture 43 - Web Scraping with R (do it yourself using notebook)
+
+Required knowledge: HTML, CSS, R pipe operator `%<%`
+
+Automated scrapping tool - [import.io](https://www.import.io/)
+
+Install and load `rvest` library
+```{r, include=FALSE}
+# install.packages('rvest', dependencies=TRUE, repos='http://cran.rstudio.com/')
+library(rvest)
+```
+
+Load demo
+```{r}
+demo(package='rvest', topic='tripadvisor')
+```
+
+## Section 12 - R Programming Basics
+
+### Lecture 45 - Introduction to Programming Basics
+
+Lessons structure
+
+- syntax description for Programmers
+- concept explaination for begginers
+
+### Lecture 46 - Logical Operators
+
+R supports 
+- `&` for AND 
+- `|` for OR 
+- `!` for NOT
+
+Combining multiple comparison and logical operators
+```{r}
+x <- 10
+x < 20
+x > 5
+x < 20 & x > 5
+x < 20 & x > 5 & x == 10
+```
+
+### Lecture 47 - If, else and else if Statements
+
+Syntax
+```{r}
+x <- 13
+if (x==10){
+  # code
+  print('X is equal to 10!')
+} else if (x == 12) {
+  print('X is equal to 12!')
+} else{
+  print('X is not equal to 10 or 12')
+}
+```
+
+### Lecture 48 - Conditional Statements Training Exercise
+
+Ex 1: Write a script that will print "Even Number" if the variable x is an even number, otherwise print "Not Even":
+```{r}
+x <- 3
+if (x%%2==0){
+  print ("Even Number")
+} else {
+  print ("Not Even")
+}
+```
+
+Ex 2: Write a script that will print 'Is a Matrix' if the variable x is a matrix, otherwise print "Not a Matrix". Hint: You may want to check out help(is.matrix)
+
+```{r}
+x <- matrix()
+if (is.matrix(x)){
+  print ("Is a Matrix")
+} else {
+  print ("Not a Matrix")
+}
+```
+
+Ex 3: Create a script that given a numeric vector x with a length 3, will print out the elements in order from high to low. You must use if,else if, and else statements for your logic. (This code will be relatively long)
+
+Using built-in function (wrong answer)
+```{r}
+x <- c(3,7,1)
+if (length(x)==3){
+  print (x[order(-x)])
+}
+```
+
+Using if, else if:
+```{r}
+x <- c(7,3,1)
+if (length(x)==3){
+  if (x[1] > x[2] & x[1] > x[3]){
+    if (x[2] > x[3]) {
+      print(x[c(1,2,3)])
+    } else {
+      print(x[c(1,3,2)])
+    }
+  } else if (x[2] > x[3]){
+    if (x[3] > x[1]) {
+      print(x[c(2,3,1)])
+    } else {
+      print(x[c(2,1,3)])
+    }
+  } else {
+    if (x[2] > x[1]){
+      print(x[c(3,2,1)])
+    } else{
+      print(x[c(3,1,2)])
+    }
+  }
+}
+```
+
+Ex 4: Write a script that uses if,else if, and else statements to print the max element in a numeric vector with 3 elements.
+
+```{r}
+x <- c(20,10,1)
+if (length(x) == 3){
+  if (x[1]>x[2] & x[1] > x[3]) {
+    print(x[1])
+  } else if (x[2]>x[3]){
+    print(x[2])
+  } else {
+    print(x[3])
+  }
+}
+```
+
+### Lecture 49 - Conditional Statements Exercises - Solutions Walkthrough
+
+Ok
+
+### Lecture 50 - While Loops
+
+Syntax
+```{r}
+x <- 0
+while(x<=10){
+  print(paste0('X is: ',x))
+  x <- x+1
+}
+```
+
+`break` statement
+```{r}
+x <- 0
+while(T){
+  print(x)
+  if(x==10){
+    break
+  }
+  x <- x+1
+}
+```
+
+### Lecture 51 - For Loop
+
+Syntax
+```{r}
+v <- c(1,2,3)
+for(variable in v){
+  print(variable)
+}
+```
+
+### Lecture 52 - Functions
+
+Syntax
+```{r}
+# parameters with default value should be placed on the end
+name_of_func <- function (input1,input2,input3=45){
+  result <- input1 + input2 + input3
+  return(result)
+}
+
+name_of_func(1,2)
+name_of_func(1,2,3)
+```
+
+### Lecture 53 - Functions Training Exercise
+
+Ex 1: Create a function that will return the product of two integers.
+
+```{r}
+prod <- function (x,y){
+  p <- x*y
+  return(p)
+}
+
+prod(3,4)
+```
+
+Ex 2: Create a function that accepts two arguments, an integer and a vector of integers. It returns TRUE if the integer is present in the vector, otherwise it returns FALSE. Make sure you pay careful attention to your placement of the return(FALSE) line in your function!
+
+First solution
+```{r}
+num_check <- function(x,y)
+  return(is.element(x,y))
+
+num_check(2,c(1,2,3))
+num_check(2,c(1,4,5))
+```
+
+Second solution
+```{r}
+num_check <- function(x,y)
+  if(x %in% y){
+    return(T)
+  } else{
+    return(F)
+  }
+
+num_check(2,c(1,2,3))
+num_check(2,c(1,4,5))
+```
+
+Ex 3: Create a function that accepts two arguments, an integer and a vector of integers. It returns the count of the number of occurences of the integer in the input vector.
+
+```{r}
+num_count <- function (x,y)
+  return(length(y[y==x]))
+
+num_count(2,c(1,1,2,2,3,3))
+num_count(1,c(1,1,2,2,3,1,4,5,5,2,2,1,3))
+```
+
+Ex 4: We want to ship bars of aluminum. We will create a function that accepts an integer representing the requested kilograms of aluminum for the package to be shipped. To fullfill these order, we have small bars (1 kilogram each) and big bars (5 kilograms each). Return the least number of bars needed.  
+For example, a load of 6 kg requires a minimum of two bars (1 5kg bars and 1 1kg bars). A load of 17 kg requires a minimum of 5 bars (3 5kg bars and 2 1kg bars).
+
+```{r}
+bar_count <- function (x)
+  return(x %/% 5 + x %% 5)
+
+bar_count(6)
+bar_count(17)
+```
+
+Ex 5: Create a function that accepts 3 integer values and returns their sum. However, if an integer value is evenly divisible by 3, then it does not count towards the sum. Return zero if all numbers are evenly divisible by 3. Hint: You may want to use the append() function.
+
+```{r}
+summer <- function(x,y,z){
+  a <- c(x,y,z)
+  c <- 0
+  for (b in a){
+    if (b %% 3 != 0){
+      c = c +b
+    }
+  } 
+  return(c)
+}
+
+summer(7,2,3)
+summer(3,6,9)
+summer(9,11,12)
+```
+
+Ex 6: Create a function that will return TRUE if an input integer is prime. Otherwise, return FALSE. You may want to look into the any() function.
+
+```{r}
+prime <- function(x){
+  a <- 2:(x-1)
+  b <- !any(x %% a == 0)
+  return(b)
+}
+
+prime(6)
+prime(7)
+prime(1)
+```
+
+### Lecture 54 - Functions Training Exercise - Solutions
+
+Ok
+
+## Section 13 - Advanced R Programming
+
+### Lecture 55 - Introduction to Advanced R Programming
+
+Unique R functions and features
+
+- regular expression
+- date and time expressions
+- math functions
+- built-in functions
+
+### Lecture 56 - Built-in R Features
+### Lecture 57 - Apply
+### Lecture 58 - Math Functions in R
+### Lecture 59 - Regular Expressions
+### Lecture 60 - Dates and Timestamps
+## Section 14 - Data Manipulation with R
+### Lecture 61 - Data Manipulation Overwiew
+### Lecture 62 - Guide to Using Dplyr
+### Lecture 63 - Guide to Using Dplyr - Part 2
+### Lecture 64 - Pipe Operator
+### Lecture 65 - Quick note on Dplyr exercise
+### Lecture 66 - Dplyr Training Exercise
+### Lecture 67 - Dplyr Training Exercise - Solutions Walkthrough
+### Lecture 68 - Guide to Using Tidyr
+## Section 15 - Data Visualization with R
+### Lecture 69 - Overview of ggplot2
+### Lecture 70 - Histograms
+### Lecture 71 - Scatterplots
+### Lecture 72 - Barplots
+### Lecture 73 - Boxplots
+### Lecture 74 - 2 Variable Plotting
+### Lecture 75 - Coordinates and Faceting
+### Lecture 76 - Themes
+### Lecture 77 - ggplot2 Exercises
+### Lecture 78 - ggplot2 Exercise Solutions
+## Section 16 - Data Visualization Project
+### Lecture 79 - Data Visualization Project
+### Lecture 80 - Data Visualization Project - Solutions Walkthrough - Part 1
+### Lecture 81 - Data Visualization Project Solutions Walkthrough - Part 2
+## Section 17 - Interactive Visualizations with Plotly
+### Lecture 82 - Overview of Plotly and Interactive Visualizations
+### Lecture 83 - Resources for Plotly and ggplot2
+## Section 18 - Capstone Data Project
+### Lecture 84 - Introduction to Capstone Project
+### Lecture 85 - Capstone Project Solutions Walkthrough
+## Section 19 - Introduction to Machine Learning with R
+### Lecture 86 - ISLR PDF
+### Lecture 87 - Introduction to Machine Learning
+resources: Machine Learning Slides.zip
+## Section 20 - Machine Learning with R - Linear Regression
+### Lecture 88 - Introduction to Linear Regression
+### Lecture 89 - Linear Regression with R - Part 1
+### Lecture 90 - Linear Regression with R - Part 2
+### Lecture 91 - Linear Regression with R - Part 3
+## Section 21 - Machine Learning Project - Linear Regression
+### Lecture 92 - Introduction to Linear Regression Project
+### Lecture 93 - ML - Linear Regression Project - Solutions Part 1
+### Lecture 94 - ML - Linear Regression Project - Solutions Part 2
+## Section 22 - Machine Learning with R - Logistic Regression
+### Lecture 95 - Introduction to Logistic Regression
+### Lecture 96 - Logistic Regression with R - Part 1
+### Lecture 97 - Logistic Regression with R - Part 2
+## Section 23 - Machine Learning Project - Logistic Regression
+### Lecture 98 - Introduction to Logistic Regression Project
+### Lecture 99 - Logistic Regression Project Solutions - Part 1
+### Lecture 100 - Logistic Regression Project Solutions - Part 2
+### Lecture 101 - Logistic Regression Project - Solutions Part 3
+## Section 24
+### Lecture 102 - 
+### Lecture 103 - 
+### Lecture 104 - 
+### Lecture 105 - 
+### Lecture 106 - 
+### Lecture 107 - 
+### Lecture 108 - 
+### Lecture 109 - 
+### Lecture 110 - 
+### Lecture 111 - 
+### Lecture 112 - 
+### Lecture 113 - 
+### Lecture 114 - 
+### Lecture 115 - 
+### Lecture 116 - 
+### Lecture 117 -
+### Lecture 118 -
+### Lecture 119 -
+### Lecture 120 -
+### Lecture 121 -
+### Lecture 122 -
+### Lecture 123 -
+### Lecture 124 -
+### Lecture 125 -
+### Lecture 126 -
+### Lecture 127 -
