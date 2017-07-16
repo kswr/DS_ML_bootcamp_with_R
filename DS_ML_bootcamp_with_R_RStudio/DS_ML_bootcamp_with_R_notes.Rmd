@@ -217,6 +217,8 @@ temps['Wed']
 
 [CRAN R Reference Card](https://cran.r-project.org/doc/contrib/Short-refcard.pdf)
 
+- built in functions references
+
 ### Lecture 19 - Vector Indexing and Slicing
 
 Filtering
@@ -325,6 +327,549 @@ stock.matrix
 
 # naming columns and rows
 # names() function is applicable, but we will use other functions
-
-
+days <- c('Mon','Tue','Wed','Thu','Fri')
+st.names <- c('GOOG','MSFT')
+colnames(stock.matrix) <- days
+rownames(stock.matrix) <- st.names
+stock.matrix
 ```
+
+### Lecture 26 - Matrix Arithmetic
+
+```{r}
+# creating a matrix
+mat <- matrix(1:25, byrow = T, nrow = 5)
+mat
+mat*2
+mat/2
+mat^2
+1/mat
+# comparing matrix outputs logicals matrix
+mat > 15 
+# print all > 15 from matrix
+mat[mat>15]
+# adding matrices
+mat + mat
+# adding to the value of matrix
+mat + 2
+mat ^ mat
+# not true matrix multiplication, but element by element
+mat * mat
+# real matrix multiplication and matrix multiplication operator
+mat %*% mat
+```
+
+### Lecture 27 - Matrix Operations
+
+Basic operations acros columns and rows
+```{r}
+# column totals
+colSums(stock.matrix)
+# row totals
+rowSums(stock.matrix)
+# column means
+colMeans(stock.matrix)
+# row means
+rowMeans(stock.matrix)
+```
+
+Bindings new rows and columns
+
+- column bind - `cbind()`
+- row bind:
+```{r}
+# row bind
+FB <- c(111,112,113,120,145)
+tech.stocks <- rbind(stock.matrix,FB)
+tech.stocks
+# name of new row comes from name of binded vector
+
+# column bind
+avg <- rowMeans(tech.stocks)
+tech.stocks <- cbind(tech.stocks,avg)
+tech.stocks
+# name of new columns comes from name of binded vector
+```
+
+### Lecture 28 - Matrix Selection and Indexing
+
+```{r}
+# creating matrix
+mat <- matrix(1:50,byrow=T,nrow=5)
+# first row
+mat[1,]
+# first column
+mat[,1]
+# first 3 rows
+mat[1:3,]
+# first 3 columns from first 3 rows
+mat[1:3,1:3]
+# last 2 columns
+mat[,9:10]
+```
+
+### Lecture 29 - Factor and Categorical Matrices
+
+`factor()` - useful for creating categorical matrices during data analysis and ML (usualy for dummy variables)
+
+**Nominal** categorical variables - don't have any order
+```{r}
+animal <- c('d','c','d','c','c')
+# factor() returns vector and levels
+fact.ani <- factor(animal)
+fact.ani
+```
+
+**Ordinal** categorical variables - have order
+```{r}
+temps <- c('cold','med','hot','hot','hot','cold','med')
+fact.temps <- factor(temps, ordered = T, levels = c('cold','med','hot'))
+fact.temps
+# summary() returns levels and their number of appearances for factorized variables
+summary(fact.temps)
+# and length, class and mode for unfactorized variables
+summary(temps)
+```
+
+### Lecture 30 - R Matrix Exercises
+
+Ex 1: Create 2 vectors A and B, where A is (1,2,3) and B is (4,5,6). With these vectors, use the cbind() or rbind() function to create a 2 by 3 matrix from the vectors. You'll need to figure out which of these binding functions is the correct choice.
+
+```{r}
+A <- c(1,2,3)
+B <- c(4,5,6)
+AB <- rbind(A,B)
+AB
+```
+
+Ex 2: Create a 3 by 3 matrix consisting of the numbers 1-9. Create this matrix using the shortcut 1:9 and by specifying the nrow argument in the matrix() function call. Assign this matrix to the variable mat
+
+```{r}
+mat <- matrix(1:9,nrow=3)
+mat
+```
+
+Ex 3: Confirm that mat is a matrix using is.matrix()
+
+```{r}
+is.matrix(mat)
+```
+
+Ex 4: Create a 5 by 5 matrix consisting of the numbers 1-25 and assign it to the variable mat2. The top row should be the numbers 1-5.
+
+```{r}
+mat2 <- matrix(1:25, byrow = T, nrow = 5)
+mat2
+```
+
+Ex 5: Using indexing notation, grab a sub-section of mat2 from the previous exercise that looks like this
+
+```{r}
+mat2[2:3,2:3]
+```
+
+Ex 6: Using indexing notation, grab a sub-section of mat2 from the previous exercise that looks like this:
+
+
+```{r}
+mat2[4:5,4:5]
+```
+
+What is the sum of all the elements in mat2?
+
+```{r}
+sum(mat2)
+```
+
+Ex 8: Ok time for our last exercise! Find out how to use runif() to create a 4 by 5 matrix consisting of 20 random numbers (4*5=20).
+
+```{r}
+mat3 <- matrix(runif(20,0,100),nrow = 4)
+mat3
+```
+
+### Lecture 31 - Matrix Training Exercises - Solutions Walkthrough
+
+Ok
+
+## Section 9 - R Data Frames
+
+### Lecture 32 - Introduction to R Data Frames
+
+Introduction to section
+
+### Lecture 33 - Data Frame Basics
+
+Matrix has to hold data of one datatype
+
+Data Frame can hold various datatypes
+
+To list all built-in data frames: `data()`
+
+To list beginning or end of data frame use `head()` or `tail()` functions respectively
+
+Strucuture of data frame: `str()`
+
+Summary of data frame: `summary()`
+
+Creating data frame:
+```{r}
+days <- c('Mon','Tue','Wed','Thur','Fri')
+temp <- c(22.2,21,23,24.3,25)
+rain <- c(T,T,F,F,T)
+df <- data.frame(days,temp,rain)
+df
+str(df)
+summary(df)
+```
+
+### Lecture 34 - Data Frames Selection and Indexing
+
+Slicing
+```{r}
+# bracket notation returns data in data frame format
+df[1,]
+df[,1]
+df[1,'days']
+df['days']
+df[,c('days','temp')]
+```
+
+Filtering
+```{r}
+subset(df,subset = rain == T)
+subset(df, subset = temp>23)
+```
+
+Ordering
+```{r}
+# ascending
+sorted.temp <- order(df['temp'])
+sorted.temp
+df[sorted.temp,]
+# descending
+desc.temp <- order(-df['temp'])
+df[desc.temp,]
+# $ notation ascending
+df[order(df$temp),]
+# $ notation descending
+df[order(-df$temp),]
+```
+
+### Lecture 35 - Overview of Data Frame Operations - Part 1
+
+#### Creating Data Frames
+
+```{r}
+# empty data frame
+empty <- data.frame()
+# frame from vector
+c1 <- 1:10
+c2 <- letters[1:10]
+df <- data.frame(col.name.1 = c1, col.name.2 = c2)
+```
+
+#### Importing and exporting data
+
+Read from csv - `read.csv()`
+Write to csv - `write.csv()` - writes with index
+
+#### Gettin information about data frame
+
+`nrow()` - number of rows
+`ncol()` - number of columns
+`rownames()` - names of rows
+`colnames()` - names of columns
+`str()` - structure of dataframe
+```{r}
+# number of rows
+nrow(df)
+# number of columns (without index)
+ncol(df)
+# names of rows
+rownames(df)
+# names of columns
+colnames(df)
+# structure of data frame
+str(df)
+# statistical summary of data frame
+summary(df)
+```
+
+#### Referencing Cells
+
+```{r}
+# using indexes
+df[5,2]
+# using names
+df[5,"col.name.1"]
+# overwriting values
+df[2,"col.name.1"] <- 9999
+```
+
+#### Referencing rows
+
+```{r}
+# first row - returns data frame format
+df[1,]
+```
+
+#### Referencing columns
+
+Doble set of brackets returns vector set of values
+Single set of brakcets returns data frame
+
+```{r}
+# brackets and index
+df[,1]
+# brakcets and name
+df[,"col.name.1"]
+# double brakcets with name
+df[["col.name.1"]]
+# $ notation
+df$col.name.1
+# brackets and index v.2 - returns data frame format
+df[1]
+df[1:2]
+df[c(1,2)]
+# brackets and name v.2 - returns data frame format
+df['col.name.1']
+df[c('col.name.1','col.name.2')]
+```
+
+### Lecture 36 - Overview of Data Frame Operations - Part 2
+
+#### Adding Rows
+
+```{r}
+# rbind()
+df2 <- data.frame(col.name.1 = 2000, col.name.2 = 'new')
+dfnew <- rbind(df,df2)
+```
+
+#### Adding Columns
+
+```{r}
+# can be addressed using $ notation, brackets or double brackets notation
+df$newcol <- 2*df$col.name.1
+df
+```
+
+#### Renaming Columns
+
+```{r}
+# all columns
+colnames(df) <- c('1','2','3','4','5')
+# one column, using index
+colnames(df)[1] <- 'New_col_name'
+```
+
+#### Selecting Multiple Rows
+```{r}
+df[1:10,]
+# first seven rows
+head(df,7)
+# select everything but some rows
+df[-2,]
+# conditional row selecting (filtering)
+mtcars[mtcars$mpg > 20,]
+mtcars[mtcars$mpg > 20 & mtcars$cyl == 6,]
+# using subset()
+subset(mtcars, mpg > 20 & cyl == 6)
+```
+
+#### Dealing with missing data
+
+Detect 'Na' anywhere in data frame
+```{r}
+# is.na(mtcars)
+any(is.na(mtcars))
+# in any column
+any(is.na(mtcars$mpg))
+```
+
+Replace all nulls with given value
+```{r}
+# with 0
+df[is.na(df)] <- 0
+# with mean value (useful in statistics)
+mtcars$mpg[is.na(mtcars$mpg)] <- mean(mtcars$mpg)
+```
+
+### Lecture 37 - R Data Frames Training Exercise
+
+Ex 1: Recreate the following dataframe by creating vectors and using the data.frame function:
+
+```{r}
+df.rownames <- c('Sam','Frank','Amy')
+Age <- c(22,25,26)
+Weight <- c(150,165,120)
+Sex <- c('M','M','F')
+df <- data.frame(Age,Weight,Sex)
+rownames(df) <- df.rownames
+df
+```
+
+Ex 2: Check if mtcars is a dataframe using is.data.frame()
+
+```{r}
+is.data.frame(mtcars)
+```
+
+Ex 3: Use as.data.frame() to convert a matrix into a dataframe:
+
+```{r}
+mat <- matrix(1:25,nrow = 5)
+df <- as.data.frame(mat)
+df
+```
+
+Ex 4: Set the built-in data frame mtcars as a variable df. We'll use this df variable for the rest of the exercises.
+
+```{r}
+df <- mtcars  
+```
+
+Ex 5: Display the first 6 rows of df
+
+```{r}
+head(df,6)
+```
+
+Ex 6: What is the average mpg value for all the cars?
+
+```{r}
+mean(df$mpg)
+```
+
+Ex 7: Select the rows where all cars have 6 cylinders (cyl column)
+
+```{r}
+df[df$cyl==6,]
+```
+
+Ex 8: Select the columns am,gear, and carb.
+
+```{r}
+df[,c('am','gear','carb')]
+```
+
+Ex 9: Create a new column called performance, which is calculated by hp/wt.
+
+```{r}
+df$performance <- df$hp/df$wt
+df
+```
+
+Ex 10: Your performance column will have several decimal place precision. Figure out how to use round() (check help(round)) to reduce this accuracy to only 2 decimal places.
+
+```{r}
+df$performance <- round(df$performance,2)
+df
+```
+
+Ex 10: What is the average mpg for cars that have more than 100 hp AND a wt value of more than 2.5.
+
+```{r}
+mean(df[df$hp > 100 & df$wt > 2.5,'mpg'])
+```
+
+Ex 11: What is the mpg of the Hornet Sportabout?
+
+```{r}
+df['Hornet Sportabout','mpg']
+```
+
+
+### Lecture 38 - Data Frame Training Exercises - Solutions Walkthrough
+
+## Section 10 - R Lists
+
+### Lecture 39 - List Basics
+
+List - object for storing various datatypes
+
+Creating list
+```{r}
+v <- c(1,2,3)
+m <- matrix(1:10,nrow=2)
+df <- mtcars
+my.list <- list(v,m,df)
+```
+
+Naming list
+```{r}
+my.named.list <- list(sample_vec= v, my.matrix = m, sample.df = df)
+my.named.list
+```
+
+Accessing elements of the list
+```{r}
+# $ notation returns the object stored in the list
+my.named.list$sample.df
+class(my.named.list$sample.df)
+# double brackets notation returns the object stored in the list
+class(my.named.list[[1]])
+# brackets notation returns list element containing the object
+my.list[1]
+my.named.list[1]
+my.named.list['sample.vec'] 
+class(my.named.list[1])
+```
+
+Combining lists
+```{r}
+double.list <- c(my.named.list,my.named.list)
+```
+
+Structure and summary of the list
+```{r}
+str(my.named.list)
+summary(my.named.list)
+```
+
+## Section 11 - Data Input and Output with R
+
+### Lecture 40 - Introduction to Data Input and Output with R
+
+This section covers reading and writing data to files (as the name implies)
+
+### Lecture 41 - CSV Input and Output
+
+CSV - comma separated variable
+
+Reading CSV
+```{r}
+# sample CSV file
+write.csv(mtcars,file='my_example.csv')
+ex <- read.csv('my_example.csv')
+```
+
+Writing to CSV
+```{r}
+write.csv(ex,file = 'my_new_example.csv')
+```
+
+### Lecture 41 - Excel files in R
+
+Install package `readxl` and load it to work with Excel files in R
+```{r, include=FALSE}
+# install.packages('readxl')
+library(readxl)
+```
+
+Read simple sheet from xlsx file
+```{r}
+# list available sheets
+excel_sheets('Sample-Sales-Data.xlsx')
+# read data
+df <- read_xlsx('Sample-Sales-Data.xlsx',sheet = 'Sheet1')
+str(df)
+```
+
+Read whole xlsx file as list with sheets as data frames using `lapply()`
+```{r}
+entire.workbook <- lapply(excel_sheets('Sample-Sales-Data.xlsx'), read_excel, path = 'Sample-Sales-Data.xlsx')
+str(entire.workbook)
+```
+
