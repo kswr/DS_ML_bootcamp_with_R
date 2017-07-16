@@ -1197,86 +1197,546 @@ Unique R functions and features
 - built-in functions
 
 ### Lecture 56 - Built-in R Features
+
+```{r}
+# creating sequence
+seq(0,10,by = 2)
+seq(0,100,by = 100)
+# sort a vector
+v <- c(1,4,7,2,13,3,11)
+v <- sort(v)
+v
+v <- sort(v,decreasing = T)
+v
+cv <- c('b','d','a')
+sort(cv)
+# reverse
+v <- 1:10
+rev(v)
+# structure - str() - known
+# append
+v2 <- 11:20
+append(v,v2)
+# checking data type - is.<datatype> - returns T or F
+is.data.frame(mtcars)
+# converting - as.<dataype>
+as.list(v)
+```
+
+
 ### Lecture 57 - Apply
+
+Apply function over a list or vector
+
+`sample()` function - random element from given data
+```{r}
+print(sample(1:10,1))
+
+```
+```{r}
+v <- c(1,2,3,4,5)
+
+addrand <- function(x){
+  ran <- sample(1:100,1)
+  return(x+ran)
+}
+
+print(addrand(10))
+
+# lapply() - applies function to all elements of given vector and returns list
+lapply(v,addrand)
+
+# sapply() - simple apply; returns vector
+sapply(v,addrand)
+
+times2 <- function(x){
+  return(x*2)
+}
+
+result <- sapply(v,times2)
+print(result)
+```
+
+There are more `apply()` functions, to list them use `help(apply)`
+
+#### Anonymous functions
+
+Functions to be used once (symilar to `lambda` in python)
+
+```{r}
+v <- 1:5
+sapply(v,function(num){num*2})
+```
+
+#### Apply with multiple arguments
+
+```{r}
+add_choice <- function(num, choice){
+  return(num+choice)
+}
+
+sapply(v,add_choice,choice=100)
+```
+
+
 ### Lecture 58 - Math Functions in R
+
+`abs()` - absolute value
+`sum()` - sum
+`mean()` - mean
+`round(value, places after coma)` - round
+
+More in CRAN reference card
+
 ### Lecture 59 - Regular Expressions
+
+Search for patterns
+
+Regular expression - idea of pattern searching
+
+`grepl` - general regular expression (logical); returns boolean
+`grep` - general regular expression
+
+```{r}
+text <- "Hi there, do you know who you are voting for?"
+grepl('voting',text)
+grep('voting',text)
+grepl('dog',text)
+grepl('do you',text)
+# in vectors
+v <- c('a','b','c','d','d')
+grepl('b',v)
+grep('d',v)
+```
+
+
 ### Lecture 60 - Dates and Timestamps
+
+#### Date objects
+
+```{r}
+# current date
+Sys.Date()
+# converting string to date
+c <- '1990-01-01'
+my.date <- as.Date(c)
+my.date
+class(my.date)
+# converting badly formatted date
+my.date <- as.Date("Nov-03-90",format = "%b-%d-%y")
+my.date
+```
+
+#### Date format symbols
+
+- %d - Dat of the month (decimal number)
+- %m - Month (decimal number)
+- %b - Month (abbreviated)
+- %B - Month (full name)
+- %y - Year (2 digit)
+- %Y - Year (4 digit)
+
+#### Time
+
+```{r}
+as.POSIXct("11:02:03", format = "%H:%M:%S")
+strptime("11:02:03", format = "%H:%M:%S")
+Sys.time()
+```
+
+
 ## Section 14 - Data Manipulation with R
+
 ### Lecture 61 - Data Manipulation Overwiew
+
+2017-07-16 19:05:51 CEST
+
 ### Lecture 62 - Guide to Using Dplyr
+
+2017-07-16 19:06:49 CEST
+
+dplyr provides a flexible grammar of data manipulation
+
+```{r, include=FALSE}
+# dplyr masks some objects from packages stats and base
+library(dplyr)
+library(nycflights13)
+```
+
+`filter()` - much simplier filtering that bracket notation
+```{r}
+head(filter(flights,month==11,day==3,carrier=='AA'))
+```
+
+`slice()` - returns row by position
+```{r}
+slice(flights,1:10)
+```
+
+`arrange()` - orders the rows
+```{r}
+head(arrange(flights,year,month,day,desc(arr_time)))
+```
+
+
 ### Lecture 63 - Guide to Using Dplyr - Part 2
+
+2017-07-16 19:59:35 CEST
+
+`select()` - easier syntax than bracket notation
+```{r}
+head(select(flights,carrier,arr_time,month))
+```
+
+`rename()`
+```{r}
+head(rename(flights,airline_carrier = carrier))
+```
+
+`distinct()` - select distinct values
+```{r}
+distinct(select(flights,carrier))
+```
+
+`mutate()` - adding columns being functions of existing columns
+```{r}
+head(mutate(flights,new_col = arr_delay - dep_delay))
+```
+
+`transmute()` - returns only new column
+```{r}
+head(transmute(flights,new_col = arr_delay - dep_delay))
+```
+
+`summarise()` - useful for aggregating rows
+```{r}
+summarise(flights,avg_air_time=mean(air_time,na.rm = T))
+```
+
+`sample_n()` - take a random number of rows
+```{r}
+sample_n(flights,10)
+```
+
+`sample_frac()` - take a random fraction of rows
+```{r}
+sample_frac(flights,0.01)
+```
+
 ### Lecture 64 - Pipe Operator
+
+2017-07-16 20:10:28 CEST
+
+```{r}
+df <- mtcars
+# Nesting Dplyr
+result <- arrange(sample_n(filter(df,mpg>20),size = 5),desc(mpg))
+result
+
+# Multiple Assignments
+a <- filter(df,mpg>20)
+b <- sample_n(a,size=5)
+result2 <- arrange(b,desc(mpg))
+result2
+
+# Pipe Operator
+result3 <- df %>% filter(mpg>20) %>% sample_n(size=5) %>% arrange(desc(mpg))
+result3
+```
+
+
 ### Lecture 65 - Quick note on Dplyr exercise
+
+2017-07-16 20:18:02 CEST
+
+There is a typo in the solutions for the question: Use pipe operators to get the mean hp value for cars with 6 cylinders. The answer should be around 122.2857 and not around 24.26049 , I accidentally showed Standard Deviation.
+
 ### Lecture 66 - Dplyr Training Exercise
+
+2017-07-16 20:18:47 CEST
+
+We will use the mtcars dataframe for this exercise!
+
+```{r}
+df <- mtcars
+```
+
+
+Return rows of cars that have an mpg value greater than 20 and 6 cylinders.
+
+```{r}
+df %>% filter(mpg>20 & cyl==6)
+```
+
+Reorder the Data Frame by cyl first, then by descending wt.
+```{r}
+df %>% arrange(cyl,desc(wt))
+```
+
+Select the columns mpg and hp
+
+```{r}
+select(df,'mpg','hp')
+```
+
+Select the distinct values of the gear column.
+
+```{r}
+distinct(select(df,'gear'))
+```
+
+Create a new column called "Performance" which is calculated by hp divided by wt.
+
+```{r}
+mutate(df,performance = hp/wt)
+```
+
+Find the mean mpg value using dplyr.
+
+```{r}
+summarise(df,avg_mpg=mean(mpg))
+```
+
+Use pipe operators to get the mean hp value for cars with 6 cylinders.
+
+```{r}
+df %>% filter(cyl == 6) %>% summarise(mean(hp)) 
+```
+
+
 ### Lecture 67 - Dplyr Training Exercise - Solutions Walkthrough
+
+Ok
+
 ### Lecture 68 - Guide to Using Tidyr
+
+"2017-07-17 00:00:18 CEST"
+
+How to clean and tidy up data
+
+```{r, include=FALSE}
+library(tidyr)
+library(data.table)
+```
+
+Syntax of `data.table` is similar to `data.frame` but `data.table` is much faster
+
+#### `gather()` and `spread()`
+
+`gather()` - collapse multiple columns into key-pair values (kind of a pivot table)
+```{r}
+comp <- c(1,1,1,2,2,2,3,3,3)
+yr <- c(1998,1999,2000,1998,1999,2000,1998,1999,2000)
+q1 <- runif(9, min=0, max=100)
+q2 <- runif(9, min=0, max=100)
+q3 <- runif(9, min=0, max=100)
+q4 <- runif(9, min=0, max=100)
+
+df <- data.frame(comp=comp,year=yr,Qtr1 = q1,Qtr2 = q2,Qtr3 = q3,Qtr4 = q4)
+df
+
+gather(df,Quarter,Revenue,Qtr1:Qtr4)
+```
+
+`spread()` - complement of `gather()`
+
+```{r}
+stocks <- data.frame(
+  time = as.Date('2009-01-01') + 0:9,
+  X = rnorm(10, 0, 1),
+  Y = rnorm(10, 0, 2),
+  Z = rnorm(10, 0, 4)
+)
+stocks
+
+stocks.gathered <- stocks %>% gather(stock,price,X,Y,Z)
+stocks.gathered
+
+stocks.gathered %>% spread(stock,price)
+```
+
+#### `separate()` and `unite()`
+
+`separate()`
+```{r}
+df <- data.frame(new.col=c(NA,'a.x','b.y','c.z'))
+df
+
+# by default separates by non-alphanumeric separators
+separate(df,new.col,c('ABC','XYZ'))
+
+df <- data.frame(new.col=c(NA,'a-x','b-y','c-z'))
+df
+
+# still would work without given `sep` parameter
+df.sep <- separate(data = df, col = new.col, into = c('ABC','XYZ'), sep = '-')
+```
+
+`unite()` - complement to `separate()`
+```{r}
+df.sep
+unite(df.sep,new.joined.col,ABC,XYZ, sep = '---')
+```
+
+
 ## Section 15 - Data Visualization with R
+
 ### Lecture 69 - Overview of ggplot2
+
 ### Lecture 70 - Histograms
+
 ### Lecture 71 - Scatterplots
+
 ### Lecture 72 - Barplots
+
 ### Lecture 73 - Boxplots
+
 ### Lecture 74 - 2 Variable Plotting
+
 ### Lecture 75 - Coordinates and Faceting
+
 ### Lecture 76 - Themes
+
 ### Lecture 77 - ggplot2 Exercises
+
 ### Lecture 78 - ggplot2 Exercise Solutions
+
 ## Section 16 - Data Visualization Project
+
 ### Lecture 79 - Data Visualization Project
+
 ### Lecture 80 - Data Visualization Project - Solutions Walkthrough - Part 1
+
 ### Lecture 81 - Data Visualization Project Solutions Walkthrough - Part 2
+
 ## Section 17 - Interactive Visualizations with Plotly
+
 ### Lecture 82 - Overview of Plotly and Interactive Visualizations
+
 ### Lecture 83 - Resources for Plotly and ggplot2
+
 ## Section 18 - Capstone Data Project
+
 ### Lecture 84 - Introduction to Capstone Project
+
 ### Lecture 85 - Capstone Project Solutions Walkthrough
+
 ## Section 19 - Introduction to Machine Learning with R
+
 ### Lecture 86 - ISLR PDF
+
 ### Lecture 87 - Introduction to Machine Learning
+
 resources: Machine Learning Slides.zip
+
 ## Section 20 - Machine Learning with R - Linear Regression
+
 ### Lecture 88 - Introduction to Linear Regression
+
 ### Lecture 89 - Linear Regression with R - Part 1
+
 ### Lecture 90 - Linear Regression with R - Part 2
+
 ### Lecture 91 - Linear Regression with R - Part 3
+
 ## Section 21 - Machine Learning Project - Linear Regression
+
 ### Lecture 92 - Introduction to Linear Regression Project
+
 ### Lecture 93 - ML - Linear Regression Project - Solutions Part 1
+
 ### Lecture 94 - ML - Linear Regression Project - Solutions Part 2
+
 ## Section 22 - Machine Learning with R - Logistic Regression
+
 ### Lecture 95 - Introduction to Logistic Regression
+
 ### Lecture 96 - Logistic Regression with R - Part 1
+
 ### Lecture 97 - Logistic Regression with R - Part 2
+
 ## Section 23 - Machine Learning Project - Logistic Regression
+
 ### Lecture 98 - Introduction to Logistic Regression Project
+
 ### Lecture 99 - Logistic Regression Project Solutions - Part 1
+
 ### Lecture 100 - Logistic Regression Project Solutions - Part 2
+
 ### Lecture 101 - Logistic Regression Project - Solutions Part 3
-## Section 24
-### Lecture 102 - 
-### Lecture 103 - 
-### Lecture 104 - 
-### Lecture 105 - 
-### Lecture 106 - 
-### Lecture 107 - 
-### Lecture 108 - 
-### Lecture 109 - 
-### Lecture 110 - 
-### Lecture 111 - 
-### Lecture 112 - 
-### Lecture 113 - 
-### Lecture 114 - 
-### Lecture 115 - 
-### Lecture 116 - 
-### Lecture 117 -
-### Lecture 118 -
-### Lecture 119 -
-### Lecture 120 -
-### Lecture 121 -
-### Lecture 122 -
-### Lecture 123 -
-### Lecture 124 -
-### Lecture 125 -
-### Lecture 126 -
-### Lecture 127 -
+
+## Section 24 - Machine Learning with R - K Nearest Neighbors
+
+### Lecture 102 - Introduction to K Nearest Neighbors
+
+### Lecture 103 - K Nearest Neighbors with R
+
+## Section 25 - Machine Learning Project - K Nearest Neighbors
+
+### Lecture 104 - Introduction K Nearest Neighbors Project
+
+### Lecture 105 - K Nearest Neighbors Project Solutions
+
+## Section 26 - Machine Learning with R - Decision Trees and Random Forests
+
+### Lecture 106 - Introduction to Tree Methods
+
+### Lecture 107 - Decision Trees and Random Forests with R
+
+## Section 27 - Machine Learning Project - Decision Trees and Random Forests
+
+### Lecture 108 - Introduction to Decision Trees and Random Forests Project
+
+### Lecture 109 - Tree Methods Project Solutions - Part 1
+
+### Lecture 110 - Tree Methods Project Solutions - Part 2
+
+## Section 28 - Machine Learning with R - Support Vector Machines
+
+### Lecture 111 - Introduction to Support Vector Machines
+
+### Lecture 112 - Support Vector Machines with R
+
+## Section 29 - Machine Learning Project - Support Vector Machines
+
+### Lecture 113 - Introduction to SVM Project
+
+### Lecture 114 - Support Vector Machines Project - Solutions Part 1
+
+### Lecture 115 - Support Vector Machines Project - Solutions Part 2
+
+## Section 30 - Machine Learning with R - K-means Clustering
+
+### Lecture 116 - Introduction to K-Means Clustering
+
+### Lecture 117 - K Means Clustering with R
+
+## Section 31 - Machine Learning Project - K-means Clustering
+
+### Lecture 118 - Introduction to K Means Clustering Project
+
+### Lecture 119 - K Means Clustering Project - Solutions Walkthrough
+
+## Section 32 - Machine Learning with R - Natural Language Processing
+
+### Lecture 120 - Introduction to Natural Language Processing
+
+### Lecture 121 - Natural Language Processing with R - Part 1
+
+### Lecture 122 - Natural Language Processing with R - Part 2
+
+## Section 33 - Machine Learning with R - Neural Nets
+
+### Lecture 123 - Introduction to Neural Nets
+
+### Lecture 124 - Neural Nets with R
+
+## Section 34 - Machine Learning Project - Neural Nets
+
+### Lecture 125 - Introduction to Neural Nets Project
+
+### Lecture 126 - Neural Nets Project - Solutions
+
+## Section 35 - Bonus Section - Discounts for Other Courses
+
+### Lecture 127 - Bonus Discount Coupons
