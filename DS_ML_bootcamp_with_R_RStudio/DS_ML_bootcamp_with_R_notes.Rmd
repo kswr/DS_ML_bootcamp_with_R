@@ -1581,9 +1581,79 @@ unite(df.sep,new.joined.col,ABC,XYZ, sep = '---')
 
 ## Section 15 - Data Visualization with R
 
+2017-07-17 14:34:43 CEST
+
 ### Lecture 69 - Overview of ggplot2
 
+2017-07-17 14:34:53 CEST
+
+```{r, include=FALSE}
+library(ggplot2)
+```
+
+- most popular data visualization package in R
+- created by Hadley Wickham (authror of `dplyr` and `tidyr`)
+- follows a distinct "Grammar of Graphics"
+- built on idea of adding layers
+
+#### `ggplot2` layers
+
+1. Data (required)
+1. Aesthetics (required)
+1. Geometries (required)
+1. Facets (pl. płaszczyzny) (optional)
+1. Statistics (optional)
+1. Coordinates (optional)
+1. Theme (optional)
+
+Examples
+```{r}
+# Data
+pl <- ggplot(data = mtcars)
+pl
+# Aesthetics
+pl <- ggplot(data = mtcars, aes(x = mpg,y = hp))
+pl
+# Geometry (use help to access all geometries)
+pl <- pl + geom_point()
+pl
+# Facets
+pl <- pl + facet_grid(cyl~.)
+pl
+# Statistics
+pl2 <- pl + stat_smooth()
+pl2
+# Coordinates
+pl2 <- pl2 + coord_cartesian(xlim = c(15,25))
+pl2
+# Theme - can be downloaded or created
+pl2 <- pl2 + theme_bw()
+pl2
+```
+
+
+
 ### Lecture 70 - Histograms
+
+2017-07-18 22:30:26 CEST
+
+```{r, include=FALSE}
+library(ggplot2)
+library(ggplot2movies)
+```
+
+
+```{r}
+# data and aesthetics
+pl <- ggplot(movies,aes(x = rating))
+# geometry
+pl2 <- pl + geom_histogram(binwidth = 0.1, color = 'red', fill = 'pink',alpha=0.4)
+
+pl3 <- pl2 + xlab('Movie Rating') + ylab('Count')
+pl3
+
+pl3 <- pl3 + ggtitle('MYTITLE')
+```
 
 ### Lecture 71 - Scatterplots
 
