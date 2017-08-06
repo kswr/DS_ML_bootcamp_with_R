@@ -1,6 +1,8 @@
 ---
 title: "Data Science and Machine Learning Bootcamp with R"
-output: html_notebook
+output: 
+    html_notebook:
+        toc: true
 ---
 
 [Course dashboard](https://www.udemy.com/data-science-and-machine-learning-bootcamp-with-r/learn/v4/overview)
@@ -1589,6 +1591,7 @@ unite(df.sep,new.joined.col,ABC,XYZ, sep = '---')
 
 ```{r, include=FALSE}
 library(ggplot2)
+library(ggplot2movies)
 ```
 
 - most popular data visualization package in R
@@ -1650,30 +1653,271 @@ pl <- ggplot(movies,aes(x = rating))
 pl2 <- pl + geom_histogram(binwidth = 0.1, color = 'red', fill = 'pink',alpha=0.4)
 
 pl3 <- pl2 + xlab('Movie Rating') + ylab('Count')
-pl3
 
 pl3 <- pl3 + ggtitle('MYTITLE')
+pl3
+
+pl10 <- pl + geom_histogram(binwidth = 0.1, aes(fill=..count..)) + xlab('Movie Rating') + ylab('Count') + ggtitle('MY TITLE')
+pl10
 ```
 
 ### Lecture 71 - Scatterplots
 
+2017-07-18 23:57:34 CEST
+
+```{r}
+df <- mtcars
+# data & aesthetics
+pl <- ggplot(df,aes(x=wt,y=mpg))
+# geometry
+pl + geom_point()
+# opacity
+pl + geom_point(alpha = 0.5, size = 5)
+# size based on continous variable
+pl4 <- pl + geom_point(alpha = 0.5, aes(size = hp))
+pl4
+# use factor for discrete variables
+pl5 <- pl + geom_point(alpha = 0.5, aes(size = factor(cyl)))
+pl5
+# use factor for discrete variables with shape and color
+pl6 <- pl + geom_point(alpha = 1, size = 4, aes(shape = factor(cyl), color = factor(cyl)))
+pl6
+# more about color
+pl7 <- pl + geom_point(size=5, color = '#00ffcc')
+pl7
+pl8 <- pl + geom_point(size=5, aes(color=hp)) + scale_color_gradient(low = 'blue', high = 'red')
+pl8 
+```
+
+Hex color pickers can be found online
+
+Including [color-hex.com](http://www.color-hex.com/)
+
 ### Lecture 72 - Barplots
+
+2017-07-19 00:41:19 CEST
+
+Count (occurences) for categorical data (e.g. car segment) instead of continous data (as for histogram, e.g. weight)
+
+```{r}
+df <- mpg
+pl <- ggplot(df, aes(x=class)) # class is variable of df 
+pl + geom_bar()
+# use colors based on other column
+pl + geom_bar(color='blue', fill = 'blue')
+# to do so use aes() function
+pl + geom_bar(aes(fill=drv))
+# use position parameter to change displaying of bars (for easier comparing)
+pl + geom_bar(aes(fill=drv), position = 'dodge') + ggtitle('dodge')
+pl + geom_bar(aes(fill=drv), position = 'fill') + ggtitle('fill')
+```
+
 
 ### Lecture 73 - Boxplots
 
+2017-07-20 11:40:22 CEST
+
+Boxplots, box-and-whisker plots or whiskerplots
+
+```{r}
+df <- mtcars
+pl <- ggplot(df, aes(x=factor(cyl), y=mpg))
+# boxplot
+pl + geom_boxplot()
+# reversed coordinates
+pl + geom_boxplot() + coord_flip()
+# separate colors for each cylinder
+pl + geom_boxplot(aes(fill = factor(cyl)))
+# id + theme
+pl + geom_boxplot(aes(fill = factor(cyl))) + theme_dark()
+```
+
+
 ### Lecture 74 - 2 Variable Plotting
+
+2017-07-20 15:03:53 CEST
+
+```{r}
+pl <- ggplot(movies, aes(x = year, y = rating))
+pl + geom_bin2d(binwidth = c(3,1)) + scale_fill_gradient(high = 'red', low = 'blue')
+pl + geom_hex() + scale_fill_gradient(high = 'red', low = 'blue')
+pl + geom_density_2d() + scale_fill_gradient(high = 'red', low = 'blue')
+```
+
 
 ### Lecture 75 - Coordinates and Faceting
 
+```{r}
+pl <- ggplot(mpg,aes(x=displ,y=hwy)) + geom_point()
+
+pl
+
+pl + coord_cartesian(xlim = c(1,4), ylim = c(15,30))
+
+pl + coord_fixed(ratio = 1/3)
+```
+
+Check documentation for `facet_grid`
+
+Syntax may be confusing, here it goes:
+```{r}
+pl
+
+# separate to 4 facets based on number of cylinders each of those cars has
+
+# syntax: facet_grid(y_axis_separate ~ x_axis_separate)
+
+pl + facet_grid(. ~ cyl)
+
+pl + facet_grid(drv ~ .)
+
+pl + facet_grid(drv ~ cyl)
+```
+
 ### Lecture 76 - Themes
+
+Final layer in grammar of graphics
+
+`ggthemes` - package with themes
+
+```{r}
+theme_set(theme_classic())
+
+pl <- ggplot(mtcars,aes(x=wt,y=mpg)) + geom_point()
+
+pl
+
+# set theme for all following plots
+
+theme_set(theme_minimal())
+
+pl
+
+# set theme manually for one plot
+
+pl + theme_dark()
+
+# use ggthemes
+
+require(ggthemes)
+
+pl + theme_excel()
+
+pl + theme_economist()
+
+pl + theme_wsj()
+```
+
 
 ### Lecture 77 - ggplot2 Exercises
 
-### Lecture 78 - ggplot2 Exercise Solutions
+Recreate the following plots shown below. Don't worry if your plots don't match exactly what is shown below, as long as you have a general understanding of ggplot2 and the grammar of graphics
+
+For the first few plots, use the mpg dataset
+```{r}
+require(ggplot2)
+require(ggthemes)
+```
+
+Histogram of hwy mpg values:
+```{r}
+# my solution, ok
+ggplot(mpg, aes(x=hwy)) + geom_histogram(fill = 'red', alpha = 0.4)
+# exact solution
+ggplot(mpg, aes(x=hwy)) + geom_histogram(bins = 20, fill = 'red', alpha = 0.4)
+```
+
+Barplot of car counts per manufacturer with color fill defined by cyl count
+
+```{r}
+# my solution, ok
+pl0 <- ggplot(mpg, aes(x=manufacturer, fill = factor(cyl))) + geom_bar()
+pl0
+# exact solution
+pl1 <- ggplot(mpg,aes(x=manufacturer)) + geom_bar(aes(fill=factor(cyl))) + theme_gdocs()
+pl1
+```
+
+Switch now to use the txhousing dataset that comes with ggplot2
+
+Create a scatterplot of volume versus sales. Afterwards play around with alpha and color arguments to clarify information.
+
+```{r}
+# my solution, ok
+pl0 <- ggplot(txhousing, aes(x = sales, y = volume)) + geom_point( alpha = 0.4, color = 'blue') + theme_gray()
+pl0 
+# exact solution
+pl1 <- ggplot(txhousing,aes(x=sales,y=volume)) + geom_point(color='blue',alpha=0.5)
+pl1
+```
+
+Add a smooth fit line to the scatterplot from above. Hint: You may need to look up geom_smooth()
+
+```{r}
+# the same as in solution
+pl0 + geom_smooth(color = 'red')
+```
+
+
+### Lecture 78 - ggplot2 Exercise Solutions Walkthrough
+
+Ok, comparison in Lecture 77
 
 ## Section 16 - Data Visualization Project
 
 ### Lecture 79 - Data Visualization Project
+
+For this optional assignment we will be recreating this plot from The Economist:
+
+![](Economist1.png)
+
+Import libraries and dataframe
+
+```{r}
+require(ggplot2)
+require(data.table)
+df <- fread("Economist_Assignment_Data.csv", drop = 1)
+head(df)
+```
+
+Create scatterplot
+
+```{r}
+pl2 <- ggplot(df, aes(x = CPI, y = HDI, color = Region)) + geom_point(shape = 1, size = 5) + geom_smooth(aes(group=1), method = 'lm', formula = y ~log(x), se = F, color = 'red')
+pl2
+```
+
+Labeling
+
+```{r}
+pl <- ggplot(df, aes(x = CPI, y = HDI, color = Region)) + geom_point(shape = 1, size = 5) + geom_smooth(aes(group=1), method = 'lm', formula = y ~log(x), se = F, color = 'red') + geom_text(aes(label=Country))
+pl
+```
+
+Subset labeling
+
+```{r}
+pointsToLabel <- c("Russia", "Venezuela", "Iraq", "Myanmar", "Sudan",
+                   "Afghanistan", "Congo", "Greece", "Argentina", "Brazil",
+                   "India", "Italy", "China", "South Africa", "Spane",
+                   "Botswana", "Cape Verde", "Bhutan", "Rwanda", "France",
+                   "United States", "Germany", "Britain", "Barbados", "Norway", "Japan",
+                   "New Zealand", "Singapore")
+
+pl3 <- pl2 + geom_text(aes(label = Country), color = "gray20", 
+                data = subset(df, Country %in% pointsToLabel),check_overlap = TRUE)
+
+pl3
+```
+
+Finishing
+
+```{r}
+pl4 <- pl3 + theme_bw() + scale_x_continuous(name = "Corruption perception index, 2011 (10 = least corrupt)", limits = c(1,10), breaks = 1:10) + scale_y_continuous(name = "Human Development Index, 2011 (1=best)", limits = c(0.2,1.0), breaks = c(0.2,0.4,0.6,0.8,1.0))
+pl4
+```
+
+
 
 ### Lecture 80 - Data Visualization Project - Solutions Walkthrough - Part 1
 
