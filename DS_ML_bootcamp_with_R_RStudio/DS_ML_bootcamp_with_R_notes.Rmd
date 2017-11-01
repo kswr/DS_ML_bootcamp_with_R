@@ -1874,8 +1874,8 @@ For this optional assignment we will be recreating this plot from The Economist:
 Import libraries and dataframe
 
 ```{r}
-require(ggplot2)
-require(data.table)
+library(ggplot2)
+library(data.table)
 df <- fread("Economist_Assignment_Data.csv", drop = 1)
 head(df)
 ```
@@ -1913,25 +1913,140 @@ pl3
 Finishing
 
 ```{r}
-pl4 <- pl3 + theme_bw() + scale_x_continuous(name = "Corruption perception index, 2011 (10 = least corrupt)", limits = c(1,10), breaks = 1:10) + scale_y_continuous(name = "Human Development Index, 2011 (1=best)", limits = c(0.2,1.0), breaks = c(0.2,0.4,0.6,0.8,1.0))
+pl4 <- pl3 + theme_bw() + scale_x_continuous(name = "Corruption perception index, 2011 (10 = least corrupt)", limits = c(1,10), breaks = 1:10) + scale_y_continuous(name = "Human Development Index, 2011 (1=best)", limits = c(0.2,1.0), breaks = c(0.2,0.4,0.6,0.8,1.0)) + ggtitle("Corruption and Human Development")
 pl4
+# theme
+pl4 + theme_economist_white()
+# pl5 is final version
+pl5 <- pl4 + ggthemes::theme_economist_white()
+pl5
 ```
 
 
 
 ### Lecture 80 - Data Visualization Project - Solutions Walkthrough - Part 1
 
+Ok
+
 ### Lecture 81 - Data Visualization Project Solutions Walkthrough - Part 2
+
+Ok
 
 ## Section 17 - Interactive Visualizations with Plotly
 
 ### Lecture 82 - Overview of Plotly and Interactive Visualizations
 
+[about plotly](https://plot.ly)
+
+Plotly is foss library for creating interactive graphs and visualisations in JS, R, Python, Scala and Matlab
+
+`ggplotly()` is `plotly` function wchich converts `ggplot2` script into plotly.js files which plotly is based on
+
+```{r}
+library(plotly)
+library(ggplot2)
+
+pl <- ggplot(mtcars, aes(mpg,wt)) + geom_point()
+pl
+
+gpl <- ggplotly(pl)
+gpl
+
+gpl1 <- ggplotly(pl5)
+gpl1
+```
+
 ### Lecture 83 - Resources for Plotly and ggplot2
+
+[Reference for gglotly() examples](https://plot.ly/ggplot2/)
+
+[Reference for full ggplotly example documentation:](http://ropensci.github.io/plotly-test-table/tables/0e3d5ca144d27d8416318824c1b6ec1421a51045/index.html)
 
 ## Section 18 - Capstone Data Project
 
 ### Lecture 84 - Introduction to Capstone Project
+
+#### Moneyball Project
+
+```{r}
+
+library(dplyr)
+
+# load data
+
+batting <- read.csv('../R-for-Data-Science-and-Machine-Learning/Training Exercises/Capstone and Data Viz Projects/Capstone Project/Batting.csv')
+
+# check content
+head(batting)
+str(batting)
+
+# head of the first five rows of AB column
+head(batting$AB, n=5L)
+
+# head of the doubles
+head(batting$X2B)
+
+# feature engineering
+# add Batting Average
+
+batting$BA <- batting$H / batting$AB
+
+# verification of BA
+
+tail(batting$BA, 5)
+
+# calculate 1B (Singles)
+
+batting$X1B <- batting$H - batting$X2B - batting$X3B - batting$HR
+
+# On Base Percentage
+batting$OBP <- (batting$H + batting$BB + batting$HBP)/(batting$AB + batting$BB + batting$HBP + batting$SF)
+
+# Slugging Average (SLG)
+batting$SLG <- (batting$X1B + 2*batting$X2B + 3*batting$X3B + 4*batting$HR)/batting$AB 
+
+# load salaries data
+salaries <- read.csv('../R-for-Data-Science-and-Machine-Learning/Training Exercises/Capstone and Data Viz Projects/Capstone Project/Salaries.csv')
+
+# subset batting data for 1985 and onwards
+sub_batting <- subset(batting, yearID >= 1985)
+
+summary(sub_batting)
+
+# merge batting and salary data
+
+merged <- merge(sub_batting, salaries, by = c('playerID', 'yearID'))
+
+summary(merged)
+
+# get data about lost players
+
+boys <- subset(merged, playerID %in% c('giambja01','damonjo01','saenzol01'))
+
+boys2001 <- subset(boys, yearID == 2001)
+
+boys2001 <- select(boys2001, playerID, H, X2B, X3B, HR, OBP, SLG, BA, AB)
+
+# find replacement players (solution is manual, not much of data science)
+
+avail.players <- subset(merged, yearID == 2001)
+
+library(ggplot2)
+ggplot(avail.players,aes(x=OBP,y=salary)) + geom_point()
+
+avail.players <- filter(avail.players,salary<8000000,OBP>0)
+
+avail.players <- filter(avail.players,AB >= 500)
+
+possible <- head(arrange(avail.players,desc(OBP)),10)
+
+possible <- possible[,c('playerID','OBP','AB','salary')]
+
+possible
+
+possible[2:4,]
+```
+
 
 ### Lecture 85 - Capstone Project Solutions Walkthrough
 
@@ -1941,103 +2056,13 @@ pl4
 
 ### Lecture 87 - Introduction to Machine Learning
 
-resources: Machine Learning Slides.zip
+Introduction to Statistical Learning by Gareth James will be used in this section as a companion book (remember to print)
 
-## Section 20 - Machine Learning with R - Linear Regression
+Read chapters 1 & 2
 
-### Lecture 88 - Introduction to Linear Regression
+#### What is Machine Learning?
 
-### Lecture 89 - Linear Regression with R - Part 1
-
-### Lecture 90 - Linear Regression with R - Part 2
-
-### Lecture 91 - Linear Regression with R - Part 3
-
-## Section 21 - Machine Learning Project - Linear Regression
-
-### Lecture 92 - Introduction to Linear Regression Project
-
-### Lecture 93 - ML - Linear Regression Project - Solutions Part 1
-
-### Lecture 94 - ML - Linear Regression Project - Solutions Part 2
-
-## Section 22 - Machine Learning with R - Logistic Regression
-
-### Lecture 95 - Introduction to Logistic Regression
-
-### Lecture 96 - Logistic Regression with R - Part 1
-
-### Lecture 97 - Logistic Regression with R - Part 2
-
-## Section 23 - Machine Learning Project - Logistic Regression
-
-### Lecture 98 - Introduction to Logistic Regression Project
-
-### Lecture 99 - Logistic Regression Project Solutions - Part 1
-
-### Lecture 100 - Logistic Regression Project Solutions - Part 2
-
-### Lecture 101 - Logistic Regression Project - Solutions Part 3
-
-## Section 24 - Machine Learning with R - K Nearest Neighbors
-
-### Lecture 102 - Introduction to K Nearest Neighbors
-
-### Lecture 103 - K Nearest Neighbors with R
-
-## Section 25 - Machine Learning Project - K Nearest Neighbors
-
-### Lecture 104 - Introduction K Nearest Neighbors Project
-
-### Lecture 105 - K Nearest Neighbors Project Solutions
-
-## Section 26 - Machine Learning with R - Decision Trees and Random Forests
-
-### Lecture 106 - Introduction to Tree Methods
-
-### Lecture 107 - Decision Trees and Random Forests with R
-
-## Section 27 - Machine Learning Project - Decision Trees and Random Forests
-
-### Lecture 108 - Introduction to Decision Trees and Random Forests Project
-
-### Lecture 109 - Tree Methods Project Solutions - Part 1
-
-### Lecture 110 - Tree Methods Project Solutions - Part 2
-
-## Section 28 - Machine Learning with R - Support Vector Machines
-
-### Lecture 111 - Introduction to Support Vector Machines
-
-### Lecture 112 - Support Vector Machines with R
-
-## Section 29 - Machine Learning Project - Support Vector Machines
-
-### Lecture 113 - Introduction to SVM Project
-
-### Lecture 114 - Support Vector Machines Project - Solutions Part 1
-
-### Lecture 115 - Support Vector Machines Project - Solutions Part 2
-
-## Section 30 - Machine Learning with R - K-means Clustering
-
-### Lecture 116 - Introduction to K-Means Clustering
-
-### Lecture 117 - K Means Clustering with R
-
-## Section 31 - Machine Learning Project - K-means Clustering
-
-### Lecture 118 - Introduction to K Means Clustering Project
-
-### Lecture 119 - K Means Clustering Project - Solutions Walkthrough
-
-## Section 32 - Machine Learning with R - Natural Language Processing
-
-### Lecture 120 - Introduction to Natural Language Processing
-
-### Lecture 121 - Natural Language Processing with R - Part 1
-
-### Lecture 122 - Natural Language Processing with R - Part 2
+(slides)
 
 ## Section 33 - Machine Learning with R - Neural Nets
 
